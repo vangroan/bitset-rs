@@ -44,6 +44,16 @@ where
         }
     }
 
+    pub fn get(&self, pos: usize) -> bool {
+        let (index, bit_offset) = self.index_offset(pos);
+        let element = self.data[index];
+        element
+            .rotate_right(bit_offset as u32)
+            .bitand(T::one())
+            .eq(&T::one())
+    }
+
+    /// Returns the number of elements in the underlying array.
     pub fn len(&self) -> usize {
         self.data.len()
     }

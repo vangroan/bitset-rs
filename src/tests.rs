@@ -29,6 +29,24 @@ fn test_set() {
 }
 
 #[test]
+fn test_get() {
+    let mut bitset = Bitset::<2, u32>::new();
+
+    bitset.set(0, true);
+    println!("{}", bitset.get(0));
+    assert!(bitset.get(0));
+    assert!(!bitset.get(1));
+    assert!(!bitset.get(2));
+
+    bitset.set(33, true);
+    println!("{}", bitset.get(33));
+    assert!(!bitset.get(32));
+    assert!(bitset.get(33));
+    assert!(!bitset.get(34));
+    assert!(!bitset.get(35));
+}
+
+#[test]
 fn test_any() {
     let mut bitset = Bitset::<2, u32>::new();
 
