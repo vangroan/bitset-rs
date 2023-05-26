@@ -1,4 +1,30 @@
 //! Fixed-sized sequence of bits.
+//!
+//! ```
+//! use bitset::Bitset;
+//!
+//! let mut a = Bitset::<10, u32>::new();
+//!
+//! // set bits
+//! a.set(0, true);
+//! a.set(1, true);
+//! a.set(2, true);
+//!
+//! // unset a bit
+//! a.set(1, false);
+//!
+//! // iterate over the bits as 1 or 0
+//! for bit in a.bits() {
+//!     print!("{bit}");
+//! }
+//!
+//! assert!(a.any());   // check if any bits are 1
+//! assert!(!a.all());  // check if all bits are 1
+//! assert!(!a.none()); // check if no bits are 1
+//!
+//! // flip the bits using bitwise not
+//! a.flip();
+//! ```
 
 #![deny(rust_2018_idioms)]
 
@@ -71,6 +97,14 @@ where
     /// Iterator over the bits, returned as `1` or `0`.
     pub fn bits(&self) -> BitIter<'_, N, T> {
         BitIter {
+            bitset: self,
+            position: 0,
+        }
+    }
+
+    /// Iterator over the bits, returned as `true` or `false`.
+    pub fn iter(&self) -> Iter<'_, N, T> {
+        Iter {
             bitset: self,
             position: 0,
         }
@@ -168,6 +202,29 @@ where
     fn next(&mut self) -> Option<Self::Item> {
         if self.position < self.bitset.bit_len() {
             let bit = self.bitset.get_bit(self.position);
+            self.position += 1;
+            Some(bit)
+        } else {
+            None
+        }
+    }
+}
+
+/// Iterator producing the bits as either a `false` or `true`.
+pub struct Iter<'a, const N: usize, T: 'static> {
+    bitset: &'a Bitset<N, T>,
+    position: usize,
+}
+
+impl<'a, const N: usize, T> Iterator for Iter<'a, N, T>
+where
+    T: PrimInt + 'static,
+{
+    type Item = bool;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.position < self.bitset.bit_len() {
+            let bit = self.bitset.get(self.position);
             self.position += 1;
             Some(bit)
         } else {

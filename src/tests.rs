@@ -114,3 +114,29 @@ fn test_bit_iter() {
 
     assert_eq!(count, 64);
 }
+
+#[test]
+fn test_iter() {
+    let mut bitset = Bitset::<2, u32>::new();
+
+    bitset.set(0, true);
+    bitset.set(7, true);
+    bitset.set(11, true);
+    bitset.set(33, true);
+    bitset.set(42, true);
+
+    println!("{bitset:?}");
+
+    let mut count = 0;
+
+    for (i, bit) in bitset.iter().enumerate() {
+        match i {
+            0 | 7 | 11 | 33 | 42 => assert_eq!(bit, true, "index: {i}; bit: {bit}"),
+            _ => assert_eq!(bit, false, "index: {i}; bit: {bit}"),
+        }
+
+        count += 1;
+    }
+
+    assert_eq!(count, 64);
+}
