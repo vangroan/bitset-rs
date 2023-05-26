@@ -45,6 +45,19 @@ where
 {
     const BITS: usize = std::mem::size_of::<T>() * u8::BITS as usize;
 
+    /// Returns the number of bits of one underlying elements.
+    ///
+    /// ```
+    /// # use bitset::Bitset;
+    /// assert_eq!(Bitset::<1, u8>::bit_size(), 8);
+    /// assert_eq!(Bitset::<1, u16>::bit_size(), 16);
+    /// assert_eq!(Bitset::<1, u32>::bit_size(), 32);
+    /// assert_eq!(Bitset::<1, u64>::bit_size(), 64);
+    /// ```
+    pub const fn bit_size() -> usize {
+        Self::BITS
+    }
+
     #[inline]
     fn index_offset(&self, pos: usize) -> (usize, usize) {
         let index = pos / Self::BITS;
